@@ -1,5 +1,6 @@
 # Wanna Revisit: 
 - Binary Search: Guess and Check 
+- Sorted vs sort 
 
 ### Floor Division 
 
@@ -112,3 +113,72 @@ def transition_point_recipe():
 ```
 
 **Review**: Guess and Check 
+
+
+## Chapter 30 - Sets and Maps 
+- Think about whether you can use a set instead of a map. 
+- Starting from 3.7, Python gaurentees that set/map iteration order matches insertion order. 
+- You cannot modify the keys in sets and dictionaries. 
+    - Which is why we can't use a variable with a mutable type (like an array). Use tuple instead. 
+    - This is because if a set element changes, its hash will also change. 
+
+Methods: 
+```python 
+# Dictionaty 
+for key, value in my_dict.items():
+    print(key, value)
+
+keys: List = my_dict.keys()
+values: List = my_dict.values()
+
+# Delete a key/value pair from a dictionary 
+del my_dict[key]
+
+# Sets 
+add(), copy(), issubset(<=), issuperset(=>), intersection(&)
+my_set.remove(item) # Raises an error if the item doesn't exist 
+my_set.discard(item)
+my_set.pop() # Removes a random item from the set. 
+```
+
+
+## Chapter 31 - Sorting 
+- Built in sorting 
+- And using the custom comparitors 
+- Both sorting functions are stable (meaning they preserve the orders of the original elements w equal keys)
+- Uses Timsort, which is a hybrid of merge and insertion sort
+- Time complexity: O(nlogn). Best case is O(n) if it is already sorted
+
+- `list.sort(key=key, reverse=True|False)`: modifies the list in place
+    - In place means means the exisiting object is changed 
+    - Returns NONE!!!! 
+    - Only works on Lists!!!!
+- `new_list = sorted(iterable=list, key=key, reverse=True|False)`: creates and returns a new list
+    - Works on any iterable: lists, tuples, strings, and dictionaries
+
+Understanding creating the key: 
+```python 
+key=lambda x: (x[0], x[1])
+
+```
+
+
+## Chapter 32 - Stacks and Queues 
+- `from collections import deque`
+- Adding and removing is O(1) from both ends 
+- Triggers: undo/redo actions, balanced parentheses, brackets
+
+Functions:
+    - `append() / appendleft()`
+    - `extend() / extendleft()`
+    - `remove(value)`: removes the first occurance of value from deque 
+    - `pop() / popleft()`
+    - `clear()`
+    - `count(value)`: how many times the value is in the deque 
+    - `rotate(k)`: rotate deque to the right by k steps. negative k rotates to the left 
+    - `reverse()`
+    - Peek from front: `deque[0]`
+    - Peek from end: `deque[-1]`
+
+
+# Chapter 33 - Recursion
