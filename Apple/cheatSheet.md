@@ -1,18 +1,13 @@
 # Wanna Revisit: 
 - Binary Search: Guess and Check 
-- Sorted vs sort 
+- Recursion Chapter 33 .....
+- Linked List: Reversing a linked list (for single and double)
 
 ### Floor Division 
 
 ```python 
 x = x // 10 
 
-```
-
-
-### Sorting by the first element in the list 
-```python 
-intervals.sort(key=lambda x: x[0])
 ```
 
 
@@ -169,16 +164,119 @@ key=lambda x: (x[0], x[1])
 - Triggers: undo/redo actions, balanced parentheses, brackets
 
 Functions:
-    - `append() / appendleft()`
-    - `extend() / extendleft()`
-    - `remove(value)`: removes the first occurance of value from deque 
-    - `pop() / popleft()`
-    - `clear()`
-    - `count(value)`: how many times the value is in the deque 
-    - `rotate(k)`: rotate deque to the right by k steps. negative k rotates to the left 
-    - `reverse()`
-    - Peek from front: `deque[0]`
-    - Peek from end: `deque[-1]`
+- `append() / appendleft()`
+- `extend() / extendleft()`
+- `remove(value)`: removes the first occurance of value from deque 
+- `pop() / popleft()`
+- `clear()`
+- `count(value)`: how many times the value is in the deque 
+- `rotate(k)`: rotate deque to the right by k steps. negative k rotates to the left 
+- `reverse()`
+- Peek from front: `deque[0]`
+- Peek from end: `deque[-1]`
 
 
-# Chapter 33 - Recursion
+## Chapter 33 - Recursion
+
+
+## Chapter 34 - Linked Lists 
+- They are better than arrays for we want to add an element at the start, or between two elements. 
+
+```python 
+Singly Linked List: 
+class Node: 
+    def __init__(self, val, next = None): 
+        self.val = val 
+        self.next = next
+
+class DoubleNode: 
+    def __init__(self, val, next=None, prev=None): 
+        self.val = val 
+        self.next = None 
+        self.val = None 
+
+``` 
+
+```python 
+# Inserting an node in a Singly Linked List 
+new.next = head.next 
+head.next = new 
+
+# Reversing a Singly Linked List 
+def reverse_list(head): 
+    prev = None 
+    curr = head 
+    while curr: 
+        nxt = curr.next 
+        curr.next = prev 
+        prev = curr 
+        curr = nxt 
+
+```
+
+```python
+# Finding a cycle in a LL 
+
+def has_cycle(head): 
+    slow = head 
+    fast = head 
+    while fast and fast.next: 
+        fast = fast.next.next 
+        slow = slow.next 
+        if fast == slow: 
+            return False 
+
+            # If you want to find where the cycle is.. 
+            # Start slow at head and now move them one at a time. 
+            slow = head 
+            while slow != fast: 
+                slow = slow.next 
+                fast = fast.next
+            return slow.val 
+    return True
+```
+
+## Chapter 35 - Trees 
+- Root
+- Depth starts at 0 
+
+```python 
+class Node: 
+    def __init__(self, val, left=None, right=None): 
+        self.val = val 
+        self.left = left 
+        self.right = right 
+```
+
+```python 
+# Lazy strategy for checking nulls 
+
+def size(node): 
+    if not node: 
+        return 0 
+    return size(node.right) + size(node.left) + 1 
+```
+
+Traversals: 
+```python 
+def preorder(node): 
+    if not node: 
+        return 
+    print(node)
+    preorder(node.left)
+    preorder(node.right)
+
+```
+
+Passing Information through a Tree: 
+```python 
+def visit(node, info_passed_down): 
+    if base_case: 
+        return info_to_pass_up 
+
+    info_passed_up1 = visit(node.left, info_passed_down)
+    info_passed_up2 = visit(node.right, info_passed_down)
+    global_state = info_stored_globally 
+
+    return info_to_pass_up
+```
