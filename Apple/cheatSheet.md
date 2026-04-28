@@ -4,6 +4,7 @@
 - Linked List: Reversing a linked list (for single and double)
 - Trees: how does the diameter of a tree work? also just combining stuff in general 
 - Heaps: practice two heaps for median tracking
+- Sliding window: k counting problems
 
 ### Floor Division 
 
@@ -527,3 +528,104 @@ def merge_lists(lists):
 
 
 ## Chapter 38 - Sliding Windows
+- Consider the subarray marked by the left and right pointers
+- You need the find the subarray of an input array 
+- The subarray has to satisfy some contraint 
+- There is an objective that makes some subarrays "better" OR sometimes have to count
+- Types of problems: 
+    - Fixed length windows 
+    - Resetting windows: bigger window is better but a single element can make whole window invalid
+    - Maximum windows
+    - Minimum windows 
+    - Counting problems?????
+
+
+
+```python 
+# Fixed Length Window
+def fixed_length_k(arr, k): 
+    l, r = 0, 0 
+    # Initialize some data structure to track the current window 
+    # Intialize something to track the current bestt
+    
+    # While we can grow the window
+    while r < len(arr): 
+        # Grow the window 
+            # Update the data structure and increase r 
+        
+        # If the current window is the correct length (r-l ==k)
+            # Update current best if needed 
+            # Shrink window (update data structure and then increase l)
+```
+
+```python 
+def resetting_window(arr): 
+    l, r = 0, 0 
+    # Some data structure to track window 
+    # Something to track curr best 
+
+    while r < len(arr): 
+        can_grow = check if the window will still be valid with l and r
+        if we can still grow: 
+            grow the window: update data structure and increase r 
+            update curr_best if needed 
+        else: 
+            reset the window past the problematic elem 
+```
+
+```python 
+# Maximum window
+
+def max_window(arr): 
+    l, r = 0, 0 
+    # Some dataset 
+    # something to track curr best 
+    while r < len(arr): 
+        can_grow = 
+        if can_grow: 
+            # Update the ds 
+            # Increase r 
+            # Update curr best
+        else: 
+            shrink the window 
+            # Update the ds and increase l 
+
+```
+
+```python 
+# Min window
+
+def min_window(arr): 
+    l, r = 0, 0 
+    # Some dataset 
+    # something to track curr best 
+    while True: 
+        can_grow = 
+        if we have to grow the window:
+            if r == len(arr): # Can't grow the window 
+                break 
+            grow the window (update ds and increase r)
+        else: 
+            update curr best 
+            shrink window (update ds and increase l)
+    return the curr best
+```
+
+## Chapter 40 - Dynamic Programming 
+- Memoization 
+
+```python 
+memo = empty map 
+f(subproblem): 
+    if subproblem is basecase: 
+        return result 
+    if subproblem in memomap: 
+        return memo[subproblem]
+    memo[subproblem] = recurrance relation formula 
+    return memo[subproblem]
+
+return f(initial subproblem)
+```
+
+
+## Chapter 42 - Topological Sort!!!! 
