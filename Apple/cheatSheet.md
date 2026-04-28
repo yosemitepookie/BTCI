@@ -3,6 +3,7 @@
 - Recursion Chapter 33 .....
 - Linked List: Reversing a linked list (for single and double)
 - Trees: how does the diameter of a tree work? also just combining stuff in general 
+- Heaps: practice two heaps for median tracking
 
 ### Floor Division 
 
@@ -11,6 +12,8 @@ x = x // 10
 
 ```
 
+
+# Boopp!!!!!!!
 
 ## Chapter 27 - Two Pointers 
 ### Triggers: 
@@ -81,6 +84,45 @@ Copy an existing grid:
 grid_copy = [row.copy() for row in grid]
 ```
 
+### Grid DFS and BFS 
+```python 
+def grid_dfs(grid, start_r, start_c): 
+    directions = [[1, 0], [-1, 0], [0, 1], [0, -1]]
+    visited = set()
+
+    def is_valid(r, c): 
+        return 0 <= r < len(grid) and 0 <= c < len(grid[0]) and (r, c) not in visited
+
+    def visit(r, c): 
+        for dr, dc in directions: 
+            nr, nc = r + nr, c + nc 
+            if is_valid(nr, nc): 
+                visited.add(nr, nc)
+                visit(nr, nc)
+
+    visited.add(start_r, start_c)
+    visit(start_r, start_c)
+
+
+def grid_bfs(grid, start_r, start_c): 
+    visited = set()
+    directions = [[1, 0], [0, 1], [-1, 0], [0, -1]]
+    q = deque()
+    visited.add((start_r, start_c))
+    q.append((start_r, start_c))
+
+    def is_valid(r, c): 
+        return 0 <= r < len(grid) and 0 <= c < len(grid[0]) and (r, c) not in visited
+
+    while q: 
+        r, c = q.popleft()
+        for dr, dc in directions: 
+            nr, nc = r+dr, c+dc 
+            if is_valid(nr, nc): 
+                visited.add((nr, nc))
+                q.append((nr, nc))
+
+```
 
 ## Chapter 29 - Binary Search 
 - Input: sorted array or string. Or an optimization problem that is hard to optimize directly 
@@ -300,3 +342,188 @@ def visit(node, info_passed_down):
     - Count of nodes 
 - Global if it depends on comparing many nodes or combining multiple subtrees
     - Max path sum, longest path, best/max/min
+
+## Chapter 36 - Graphs 
+- Represent a graph using an adj list
+- Think of time complexities using V (vertices) and E (edges)
+- A graph is connected if there is a path from every node to every other node
+
+
+### DFS
+```python
+def graph_DFS(graph, start): 
+    visited = {start}
+    def visit(node): 
+        for nbr in graph[node]: 
+            if nbr not in visited:
+                visited.add(nbr)
+                visit(nbr)
+    visit(start)
+
+def count_connected_components(graph): 
+    count = 0 
+    visited = set()
+
+    def visit(node): 
+        for nbr in graph[node]: 
+            if nbr not in visited:
+                visited.add(nbr)
+                visit(nbr)
+    
+    for node in range(len(graph)): 
+        if node not in visited: 
+            visited.add(node)
+            visit(node)
+            count += 1 
+
+    return count
+```
+
+#### Path Reconstruction: 
+- In DFS, when we mark a node as visited, we can also track their predecessor in the DFS. 
+- Every chain of predecessors will lead to the starting node.
+- We can use predecessors to keep track of visited
+
+```python 
+def path(graph, node1, node2): 
+    predecessors = {node1: None} # The starting node does not have a predecessor 
+
+    def visit(node): 
+        for nbr in graph[node]: 
+            if nbr not in predecessors: 
+                predecessors[nbr] = node 
+                visit(nbr)
+    
+    visit(node1)
+
+    # There is no path
+    if node2 not in predecessors: 
+        return []
+
+    path = []
+    curr = node2 
+
+    while curr is not None: 
+        path.append(curr)
+        curr = predecessors[curr]
+    
+    path.reverse()
+
+    return path
+```
+
+### BFS 
+- For connectivity (like DFS) and distance questions 
+```python 
+# NOT for weighted graphs. Only for UNWEIGHTED. 
+def graph_BFS(graph, start): 
+    q = deque()
+    q.append(start)
+    distances = {start: 0}
+    while q: 
+        node = q.popleft()
+        for nbr in graph[node]: 
+            if nbr not in distances: 
+                distances[nbr] = distances[node] + 1 
+                q.append(nbr)
+
+```
+
+```python 
+# Multisource BFS - the same as graph BFS but add all the start nodes the queue 
+
+def multisourceBFS(graph, sources): 
+    q = deque()
+    distances = {}
+
+    for start in sources: 
+        q.append(start)
+        distances[start] = 0 
+    
+    while q:
+        node = q.popleft()
+        for nbr in graph[node]: 
+            if nbr not in distances: 
+                distances[nbr] = distances[node] + 1 
+                q.append(nbr)
+```
+
+
+
+## Chapter 37 - Heaps
+- Heaps are min-heaps
+- Ideal for managing sorted data dynamically without fully sorting after each operation
+- Used for: 
+    - Heapsort for sorting 
+    - Dijkstra's algorithm for shortest path in graph 
+    - Prim's for minimum spanning trees 
+- Restricting the heap size is a common optimization to save time and space 
+- Lazy deletion 
+    - Just add the element to a deleted set and then later when you pop, if it is in the deleted set don't include in final result.
+- Merging m sorted lists with a heap of pointers
+
+
+```python 
+import heapq 
+
+heapq.heapify(list)
+heapq.heappush(list, 5)
+heapq.heappop(list) # Returns the smallest elem (AKA root)
+list[0] # to peek 
+len(list)
+
+# Python's heapq, the heap is ordered by the first element of whatever you push in 
+# If you want to prioritize the 2nd element, just reorder it 
+
+for name, val in data: 
+    heapq.heappush(list, (val, name))
+
+# And then just rememeber to flip again when popping it off
+
+# ====================
+
+heapq.nlargest(list, 2)
+heapq.nsmallest(list, 2)
+
+# =====================
+# To make it a max heap!!!! 
+arr = [-x for elem in list]
+heapq.heapify(arr)
+
+# To pop it off 
+largest_elem = heapq.heappop(arr) * -1 
+```
+
+### When to use sorting vs heaps?
+- Heaps are probably the better option if you don't need every element sorted, and just smallest/largest k. 
+- Also better for dynamic data => think data structure design
+
+### Reusable Idea: Two Heap for Median Tracking 
+- Keep the lower half in a max heap, and the upper half in a min heap. 
+
+
+### Merging M sorted lists with pointers
+- Store data as (value, list, index in list)
+```python 
+def merge_lists(lists): 
+    heap = []
+    heapq.heapify(heap)
+
+    for idx, list in lists:
+        heapq.heappush(heap, (list[0], idx, 0))
+
+    res = []
+
+    while len(heap) > 0: 
+        val, list_idx, idx = heapq.heappop(heap)
+        res.append(val)
+
+        idx += 1 
+        if idx < len(lists[list_idx]): 
+            heapq.heappush((lists[list_idx][idx], list_idx, idx))
+
+    return res 
+```
+
+
+## Chapter 38 - Sliding Windows
