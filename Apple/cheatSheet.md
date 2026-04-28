@@ -2,6 +2,7 @@
 - Binary Search: Guess and Check 
 - Recursion Chapter 33 .....
 - Linked List: Reversing a linked list (for single and double)
+- Trees: how does the diameter of a tree work? also just combining stuff in general 
 
 ### Floor Division 
 
@@ -238,7 +239,8 @@ def has_cycle(head):
 
 ## Chapter 35 - Trees 
 - Root
-- Depth starts at 0 
+- Depth starts at 0 from the root 
+- Height starts at 0 from the leaf
 
 ```python 
 class Node: 
@@ -271,12 +273,30 @@ def preorder(node):
 Passing Information through a Tree: 
 ```python 
 def visit(node, info_passed_down): 
-    if base_case: 
-        return info_to_pass_up 
+    if base_case or node is None: 
+        return base_value # What you pass UP when no node
 
-    info_passed_up1 = visit(node.left, info_passed_down)
-    info_passed_up2 = visit(node.right, info_passed_down)
-    global_state = info_stored_globally 
+    new_info_down = # Update the info passed down with new info from this node 
+    left_up = visit(node.left, new_info_down)
+    right_up = visit(node.right, new_info_down)
+
+    # Combine something for THIS node 
+    info_up = combine(left_up, right_up, node)
+
+    # Update the global state 
+    update_global(node, left_up, right_up)
 
     return info_to_pass_up
 ```
+- Information you flow down: Top to Bottom 
+    - Current depth 
+    - Path sum 
+    - Constraints like min and max value 
+    - Whether the parent is valid 
+- Information you flow up: Bottom to top 
+    - Height of a subtree 
+    - Max path sum 
+    - Whether the subtree is valid
+    - Count of nodes 
+- Global if it depends on comparing many nodes or combining multiple subtrees
+    - Max path sum, longest path, best/max/min
