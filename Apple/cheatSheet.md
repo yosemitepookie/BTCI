@@ -11,6 +11,8 @@
 ```python 
 x = x // 10 
 
+math.inf
+
 ```
 
 
