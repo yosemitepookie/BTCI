@@ -173,3 +173,48 @@ I used https://interviewing.io/guides/system-design-interview.
 | Over 10,0000 RPS| Assume internet scale distributed design |
 
 #### CAP Theorem
+CAP is for Consistency, Availability, and Partition Tolerance. The CAP Theorem states that a distributed system (when data is stored across multiple machines) cannot achieve all three, so systems should be designed to achieve two out of these three. 
+
+1. In most systems, we need fault tolerance, so the choice is between consistency and availability. 
+2. You need to ask: what is worse, incorrect data, or downtime?
+3. Consistency means that every node in a network will have access to the same data. 
+    - So every read will return the most recent successful write, regardless of which server handles their request. 
+4. Availability means that the system is always available to users. 
+    - So every request sent to a working node receives a response. 
+5. Partition tolerance means that the system continues operating when nodes cannot communicate with one another. 
+    - This can happen due to network outages, regional cloud outages, etc. 
+    - In a distribute system, network failures are unavoidable. So all of our systems need partition tolerance. 
+6. CA systems: this means there is consistency and availability when there is no partition. 
+    - A single database can behave like a CA system. 
+
+#### Web Authentication and Basic Security
+1. Authentication: verifying the identity of our service's users. 
+    - Storing Passwords: 
+        - Don't store the username and password by itself. If there is a leak, this would compromise users, and people are known to use the same password for many places. 
+        - A hash function takes in an input and maps it to a smaller value. 
+        - A crypotographic hash functions are very hard to crack. 
+            - General purpose hashes like SHA-256 are fast, and so we shouldn't use them since then attackers can test billions of guesses quickly. 
+            - Use something like bcrpyt, or scrypt. These increase the computational cost of each password guess. 
+        - Use the hash table to store the password's hash. 
+    - Salting: Instead of hashing the password, attach a random word to the password and then hash it. 
+        - This is used to render rainbow tables unusable. 
+    - Real World Password Hashing: 
+2. Web Sign In: 
+    - Session Token: 
+        - This is basically equivalent to a password. So don't store it in your database in plaintext. Also salt and hash it. 
+        - This is sent with every token. 
+        - These should have a short expiration date. This does not mean the user has to log in again, you can rotate them silently in the background. 
+            - This limits the amount of time the user can be stay logged in without visiting your site. 
+        - Encrypt all traffic with HTTPs. 
+            - HTTPS encrypts all the network traffic between the client and server, instead of just an endpoint. 
+
+    - JSON Web Tokens (JWT): BBLAH BLAH BLAH!!!!!! 
+3. Cookies: This is used to store the session token or JWT on the client side. 
+    - BBLAH BLAH BLAH PT2!!!!!! 
+
+#### Load Balancers 
+A load balancer sits between the client and backend servers. It distributes the incoming requests across those servers. 
+1. Round robin: if there are n machines, then the load balancer will send requests to each of them one by one.
+    - A limitation of this, is that it does not consider the current load on each server. 
+        - So Server 1 could still be processing some expensive requests, while Server 2 is idle. 
+2. Least connections / response time: send to the most free machine. 
