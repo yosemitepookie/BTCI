@@ -125,4 +125,51 @@ I used https://interviewing.io/guides/system-design-interview.
     - Do you need strong consistency? With strong ACID guarentees?
 
 #### Scaling
-1. 
+1. Scaling means increasing a systems capacity so that it can handle more users, requests, data, or computation without becoming slow or failing. 
+2. There are two ways to scale: vertically and horizontally. These are not opposing ideas, most architectures use a combination of both scaling types. 
+3. Vertical Scaling: upgrade your computers hard drive, CPU (Central Processing Unit), and RAM (Random Access Memory). 
+    - RAM temporarily stores short term memory. 
+    - This is the easiest way to scale initially since you don't have to change your architecture. 
+    - It also has less latency since the communication is done locally on one computer, instead of through a network. 
+    - Disadvantages: 
+        - At one point, it is either too expensive, or impossible to upgrade a computers hardware past a point. 
+        - This can create a single point of failure. 
+        - Upgrading may require downtime. 
+4. Horizontal Scaling: buy more computers. 
+    - This relies on building systems that communicate between multiple computers to store and process information. A load balancer usually decides which server recieves each request.  
+    - There is database scaling and compute scaling. 
+    - Database scaling: this is used when one database cannot store or serve all of the systems data. 
+        - There are two common approaches for this: replicating and sharding. 
+        - Data Replication: Keep copies of the same database on multiple machines. 
+            - The primary database handles writes, and the replicas handle reads. 
+            - This helps because most of the time a system will have way more reads than writes. 
+        - Sharding: Dividing one large database into multiple smaller databases. 
+            - Each shard contains only part of the data. And a routing rule determines which shard stores a specific item. 
+    - Compute scaling: this is needed when one machine can't process all the work quickly enough. 
+        - This lets you split a job up into multiple, and let those jobs run in parallel. 
+5. How horizontal and vertical scaling are used together: 
+6. Caching does not replace horizontal or vertical scaling, but it is another technique that reduces the pressure on the rest of the system.
+
+##### Requests per Second 
+    - Try and convert users to requests whenever possible. Assume that: 
+        - There are 20 requests per active user per day.
+        - Peak traffix is 5x the average traffic. 
+
+| Peak RPS | Practical Rule |
+| --- | --- |
+| Under 100 | Low: One application server |
+| 100 - 1,000 RPS | Moderate: Use a few stateless servers behind a load balancer |
+| 1,000 - 10,000 | High: Horizontally scale application servers; add caching |
+| Over 10,000| Very high: Distributed infrastructure, caching, queues, replicas, and possibly sharding |
+
+##### Decision Table
+| Workload | Default Architecture |
+| --- | --- |
+| Under 100 RPS, under 100 GB| One server and one database |
+| 100 - 1,000 RPS, under 1 TB | Load balancer plus a few app servers, and one primary database |
+| 1,000 - 10,000 RPS | Horizontally scaled app servers, cache, and database replicas |
+| Over 10,000 RPS| Distributed app tier, cache, queues, replicas |
+| Over 10,000 writes/sec or over 10 TB | Shard |
+| Over 10,0000 RPS| Assume internet scale distributed design |
+
+#### CAP Theorem
