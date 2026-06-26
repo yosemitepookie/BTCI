@@ -206,8 +206,7 @@ CAP is for Consistency, Availability, and Partition Tolerance. The CAP Theorem s
         - These should have a short expiration date. This does not mean the user has to log in again, you can rotate them silently in the background. 
             - This limits the amount of time the user can be stay logged in without visiting your site. 
         - Encrypt all traffic with HTTPs. 
-            - HTTPS encrypts all the network traffic between the client and server, instead of just an endpoint. 
-
+            - HTTPS encrypts all the network traffic between the client and server, instead of just an endpoint
     - JSON Web Tokens (JWT): BBLAH BLAH BLAH!!!!!! 
 3. Cookies: This is used to store the session token or JWT on the client side. 
     - BBLAH BLAH BLAH PT2!!!!!! 
@@ -217,4 +216,160 @@ A load balancer sits between the client and backend servers. It distributes the 
 1. Round robin: if there are n machines, then the load balancer will send requests to each of them one by one.
     - A limitation of this, is that it does not consider the current load on each server. 
         - So Server 1 could still be processing some expensive requests, while Server 2 is idle. 
-2. Least connections / response time: send to the most free machine. 
+2. Least connections / response time: send request to the most free machine. 
+
+
+#### Caching 
+Caching is storing an expensive computation so that you don't have to compute it again. 
+1. We use caching to reduce an expensive network computation/number of network calls/database queries. 
+    - This means it is more expensive with storage. This is typically stored in RAM. 
+    - Caching is used for read-heavy systems like Twitter and Youtube. 
+    - Use the 80/20 rule. This states that you want to store 80% of read requests in 20% of storage/memory. 
+        - We can have caches store data in local regions. 
+            - A popular video in the USA would probably not be a popular video in Korea. 
+2. The two popular caching patterns are casche aside pattern and write through pattern and write back. 
+    - Cache-aside pattern: Here, an application will try to fetch data from cache. If the data is not found (this is called a cache miss), it will fetch data from the database or do an expensive computation, and then put that data back to the cache before returning the query back to the user. 
+        - Stregths: 
+            - We only cache the data that we need. 
+        - Weaknesses: 
+            - The data can become stale if there are lots of updates to the database. 
+            - If there are a lot of cache misses, then the application has to do a lot more work. Since now it is hitting the cache, and then going to the database, instead of just going to the database. 
+    - Write-through and Write-back patterns:
+        - Write-through: This is when we synchronously write data to the database.
+        - Write-back: This is when we asynchronously write data to the database. 
+            - We put the data in a queue, which writes the data back to the data. This will help with improving the latency of writes on your application. 
+        - A disadvantage of this, is since we are writing all the data to the cache, some of the data might not even be read. This means we are overloading the cache. 
+3. Using caching on the client side: 
+    - Cache movie recommendations for a user in their device or browser. 
+4. Cache invalidation: 
+    - We don't want to keep stale stuff in the cache. 
+    - So we need a way to expire or invalidate data from the cache. 
+    - This can be done with LRU (Least Recently Used)
+
+#### Message Queues: 
+1. A message queue is a temporary holding area for tasks or data that need to be processed. 
+A async system is one where the client sends a request, and does not wait for the message to be delivered. 
+2. The client does not expect a response. This function/API is called a "fire and forget" call. 
+    - Can think of this as when someone places an order, they aren't immediately waiting for a confirmation email. 
+3. The clients message is not immediately sent over to the processing system, but is instead sent to the broker/message queue. 
+4. Advantages: 
+    - Since a queue stores messages that need to be stored in a database, we can put them here. There is a possibility that a lot of traffic can cause the CPU of the database to go up, which can kill the server. 
+        - This would cause the database to go down and probably loose the data. 
+    - If a message has to be processed by exppensive code, you can put them in a queue while the previous messages are being processed so that you don't overload and/or kill the servers. 
+    - A queue can deliver messages to multiple systems, instead of having the client do that. 
+    - The client does not need to know the server address now. 
+5. **Idempocy???**
+
+
+#### Indexing
+1. A database index is like the index at the back of the book. 
+2. To find a record without an index, we would have to do the following. Disk access is a lot slower than searching data that is already in memory. 
+    - Load a block from disk into RAM 
+    - Search the records inside the block 
+    - Load another block if the record was not found
+3. There are two types of indexes: dense and sparse. 
+    - Dense: A dense index contains an index entry for every records. 
+        - Strength: very quick and easy look up 
+        - Weakness: 
+            - Requires more storage 
+            - Must be updated whenever records change
+    - Sparse: A sparse index contains entries for only some records, usually one entry per block or group of records.
+        - Strength: Less storage 
+        - Weaknesses: 
+            - Now you have to search within the selected block 
+            - Usually means the underlying data has to be sorted
+4. Multilevel indexes: This is used when the database grows. 
+    - Creates an index for the index. 
+5. B-Trees: 
+6. B+ Trees: 
+
+
+#### Failover 
+
+#### Replication 
+
+#### Consistent Hashing 
+
+### Part 3: Three Step Framework 
+
+The three steps are: 
+1. Requirements 
+2. Data types, access patterns, and scale 
+3. Design 
+
+#### Overview of the 3 Steps 
+
+1. Step 1: Requirements 
+    - Inputs: Problem statement from the interviewer. 
+    - Outputs: List of functional and non functional requirements
+2. Step 2: Data Types, API, and Scale 
+    - Inputs: 
+        - Functional and non-functional requirements. 
+        - Problem statement from the interviewer. 
+    - Outputs: 
+        - List of data types we have to store 
+        - Access patterns for these data types 
+        - Scale of the data and the scale of the requests the system needs to serve. 
+3. Step 3: Design
+    - Inputs: 
+        - Functional and non-functional requirements. 
+        - Problem statement given by your interviewer 
+        - List of Data Types we need to store 
+        - Access patterns for these data types (API)
+        - Scale of the data and the requests the system needs to serve 
+    - Outputs: 
+        - Data storage 
+        - Microservices 
+
+#### Step 1: Requirements
+- Inputs: Problem statement from the interviewer. 
+- Outputs: List of functional and non functional requirements
+
+1. Even if you are familiar with what they are asking you to design:    
+    ```
+    I'm not familiar with the platform. Would you be able to give me a high-level overview of what we are looking for?
+    ```
+2. Functional Requirements: the core product features and use cases that the system has to support. 
+    - The goal of the questions here is to figure out what needs to be built. Nothing about how or the scale. 
+    - Ask just enough questions to gather all use cases for the system. 
+    - Identify the main business objects and their relations. 
+        -  For Twitter it would be accounrs and tweets. Then think of the relationship between those two. 
+    - Then go deeper into what makes up each object of interest. So what makes up a tweet? Can it have media?
+    - Think about if the objects are mutable. 
+    - Access Patterns, split this into reads and writes. 
+        - Given object X, return all related objects Y. 
+3. Non-Functional Requirements: These are quality attributes that specify how the system should perform a function. 
+    - This is centered around: performance, availability, and security. 
+    - Performance: How quickly the system responds to user requests. 
+        - We would want to optimize for performance when we have syncronouse user facing workflows. 
+            - This means that the user is expecting an immediate response. 
+        - Also for workflows that are accessed most frequently. 
+    - Availability: how much downtime can the service have 
+        - We can take a hit on availability for consistency. 
+Design Tiktok: 
+- Objects: Users and Posts 
+
+- Users: 
+    - Can follow other users 
+    - Can like posts 
+    - Can delete their accounts 
+    - Contains information such as username, password, and posts created by them
+    - Can comment on or repost posts 
+- Posts:
+    - Contains words, and media (video, audio)
+    - Has a like count, comments 
+
+
+- Ask if the videos are mutable. 
+
+
+Access Patterns, split this into reads and writes. 
+Given object X, return all related objects Y. 
+1. Given a user, get all videos they have posted. 
+2. Given a user, get their feed (so this would be videos posted by people they follow)
+3. Given a video, get the likes and comments. 
+
+Writes: 
+1. Post a video 
+2. Follow an account 
+3. Like/comment on a video 
